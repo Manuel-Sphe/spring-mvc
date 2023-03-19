@@ -1,32 +1,53 @@
 package com.sphedev.mvcdemo.controller;
 
+import com.sphedev.mvcdemo.repository.Constants;
 import com.sphedev.mvcdemo.repository.Grade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class GradeController {
-    List<Grade> studentGrades = Arrays.asList(
-            new Grade("Harry","Football","C-",new Grade().getId()),
-            new Grade("Kane","Football","A-",new Grade().getId()),
-            new Grade("Ten Hag","Football","B",new Grade().getId()),
-            new Grade("Kimmich","Football","D",new Grade().getId())
-    );
+
+    List<Grade> studentGrades = new ArrayList<>();
+
+    @GetMapping
+    public String getForm(Model model, @RequestParam(required = false) String id) {
+        int index = getGradeIndex(id);
+        model.addAttribute("grade", index == Constants.NOT_FOUND ? new Grade() : studentGrades.get(index));
+        return "form";
+    }
+
+    @PostMapping("/handleSubmit")
+    public String submitForm(Grade grade) {
+        int index = getGradeIndex(grade.getId());
+        if (index == Constants.NOT_FOUND) {
+            studentGrades.add(grade);
+        } else {
+            studentGrades.set(index, grade);
+        }
+        return "redirect:/grades";
+    }
+
     @GetMapping("/grades")
-    public String getGrades(Model model){
-        model.addAttribute("grades",studentGrades);
+    public String getGrades(Model model) {
+        model.addAttribute("grades", studentGrades);
         return "grades";
     }
 
-    @GetMapping
-    public String gradeFrom(){
-        return "form";
+    public int getGradeIndex(String id) {
+        for (int i = 0; i < studentGrades.size(); i++) {
+            if (studentGrades.get(i).getId().equals(id)) return i;
+        }
+        return Constants.NOT_FOUND;
     }
 
 }
