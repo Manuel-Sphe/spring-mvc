@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Grades</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css">
+    </head>
+    <body class="bg-gray-800">
+
+    <div class="bg-gray-900 overflow-hidden">
+        <a th:href="@{/}" class="inline-block text-gray-300 hover:bg-gray-700 px-4 py-2">Form</a>
+        <a th:href="@{/grades}" class="inline-block text-gray-300 hover:bg-gray-700 px-4 py-2">Grades</a>
+    </div>
+    <div class="container fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 bg-gray-800 text-center p-6">
+        <h2 class="text-white text-6xl font-semibold font-sans mb-2 ">Grades</h2>
+        <table class="border-collapse w-full border-4 border-white text-base font-normal">
+               <thead class="bg-gray-700 text-white">
+               <tr>
+                   <th class="p-3 text-left">Student</th>
+                   <th class="p-3 text-left">Subject</th>
+                   <th class="p-3 text-left">Score</th>
+               </tr>
+               </thead>
+               <tbody>
+                   <tr th:each="grade : ${grades}" class="bg-white">
+                       <td class="border-gray-300 border p-3" th:text="${grade.name}"></td>
+                       <td class="border-gray-300 border p-3" th:text="${grade.subject}"></td>
+                       <td class="border-gray-300 border p-3" th:text="${grade.score}"></td>
+                       <td>
+                           <a role="button" class="inline-block w-full h-full mb-2 pt-2 pb-2 text-center text-white text-base font-medium uppercase bg-green-500 border-2 border-white rounded-md hover:bg-orange-500 focus:outline-none focus:border-blue-300"
+                              th:href="@{/update/{id}(id=${grade.id})}">
+                               Update
+                           </a>
+                       </td>
+
+                   </tr>
+               </tbody>
+           </table>
+
+       </div>
+    </body>
+</html>
